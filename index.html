@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/png" href="static/css/ae-fav.png"/>
+        <title>Qu&#xe6;ro</title>
+        <meta charset="utf-8" />
+
+        <!--Bootstrap-->
+        <link rel="stylesheet" href="static/lib/bootstrap/bootstrap.min.css">
+        <script src="static/lib/jquery/jquery-3.3.1.slim.min.js"></script>
+        <script src="static/lib/bootstrap/popper.min.js"></script>
+        <script src="static/lib/bootstrap/bootstrap.min.js"></script>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" href="static/css/main.css">
+    </head>
+    <body style="background-color:  #494949">
+            
+            <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style=" z-index:1000">
+                    <a class="navbar-brand" href="index.html" style="margin-left:15px">Qu&#xe6;ro</b></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                      <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                          <a class="nav-link" href="index.html">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="documentation.html">DOCUMENTATION</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color: rgba(255,255,255,.5) !important" class="nav-link" target="_blank" href="https://github.com/quaero-app/quaero">GITHUB</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">ABOUT</a>
+                        </li>
+                      </ul>
+                    </div>
+            </nav>
+        
+            <div class="container-fluid">
+                <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8" id="imgcont">
+                                <img src="static\css\background1.png" style="width: 100%; color: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) )"/>
+                        </div>
+                        <div class="col-md-2"></div>
+                </div>
+                <div class="row bg-dark">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8" style="padding-top: 10px; padding-bottom:30px">
+                                    <h1 class="text-light" style="padding-top:10px">Qu&#xe6;ro</h1>
+                                    <h5 style="color: rgba(255,255,255,.5); padding-bottom:10px">Epigraphic Boolean Search Engine</h5>
+                                    <div class="input-group">
+                                        <input id="inputmain" autocomplete="false" style="color:white; background-color: rgba(1,1,1,0.4) !important;" type="text" class="form-control" id="s" name="query" placeholder="Enter query" pattern="[a-zA-Z ]+" required>
+                                        <span class="input-group-btn">
+                                        <button id="fire" type="submit" class="btn btn-secondary" style="border-radius: 0rem .25rem .25rem 0rem !important" data-disable-with="Search">Search<button
+                                    </span>
+                                    </div>
+                                    <h6 style="margin-top:10px"><a href="" data-toggle="modal" data-target="#tutorial">New to Boolean Search?</a></h6>
+
+                            </div>
+                            <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                                <div class="accordion bg-light" id="accordionExample">
+                                        <div class="card">
+                                          <div class="card-header" id="headingOne">
+                                            <h2 class="mb-0">
+                                              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <h5 class="text-dark">Use Case I: The Eagle of the Ninth</h5>
+                                              </button>
+                                            </h2>
+                                          </div>
+                                      
+                                          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                    <p>In this example <b>Qu&#xe6;ro</b> will find all documents about the Legio IX (also written VIIII)Hispana, the ninth legion of the Imperial Roman army.</p>
+                                                    <textarea id="demoval1" style="width: 100%; height: 100px; resize:none; margin-top:10px; margin-bottom:5px" readonly>legio AND hispana AND viiii OR legionis AND hispanae AND viiii OR legioni AND hispanae AND viiii OR legionem AND hispanam AND viiii OR legione AND hispana AND viiii OR legio AND hispana AND ix OR legionis AND hispanae AND ix OR legioni AND hispanae AND ix OR legionem AND hispanam AND ix OR legione AND hispana AND ix </textarea>
+                                                    <button id="demo1" class="btn btn-secondary">Try this query</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="card">
+                                          <div class="card-header" id="headingTwo">
+                                            <h2 class="mb-0">
+                                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                    <h5 class="text-dark">Use Case II: Here Comes the Sun</h5>
+                                              </button>
+                                            </h2>
+                                          </div>
+                                          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                    <p>In this example <b>Qu&#xe6;ro</b> will find all documents about Mithras (also written Mitras or Mitrhas), a deity of the Roman Empire</p>
+                                                    <textarea id="demoval2" style="width: 100%; height: 80px; resize:none; margin-top:10px; margin-bottom:5px" readonly>mithras OR mithrae OR mithram OR mithra OR mitras OR mitrae OR mitram OR mihra OR mitrhas OR mitrhae OR mitrham OR mitrha</textarea>
+                                                    <button id="demo2" class="btn btn-secondary">Try this query</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="card">
+                                          <div class="card-header" id="headingThree">
+                                            <h2 class="mb-0">
+                                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                    <h5 class="text-dark">Use Case III: The Lady</h5>
+                                              </button>
+                                            </h2>
+                                          </div>
+                                          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                    <p>In this example <b>Qu&#xe6;ro</b> will find all documents about Iulia Domna (160–217 AD), a powerfull Roman Empress.</p>
+                                                    <textarea id="demoval3" style="width: 100%; height: 80px; resize:none; margin-top:10px; margin-bottom:5px" readonly>iulia AND domna OR iuliae AND domnae OR iuliam AND domnam</textarea>
+                                                    <button id="demo3" class="btn btn-secondary">Try this query</button>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                                            
+                                                </div>
+                                          </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                </div>
+            </div>
+
+
+                <!-- Modal Tutorial-->
+                <div class="modal fade" id="tutorial" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">New to Boolean Search?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                        <p>
+                                                Boolean Search is a type of query that combine keywords and Boolean operators (AND, OR and NOT) to refine results.
+                                        </p>
+                                        <div style="margin-left: 25px; margin-right: 25px">
+                                            <h6>AND</h6>
+                                            <p>Ex: <b>"titius AND gaius"</b> This query will retrieve all documents having both "titius" and "gaius".</p>
+                                            <h6>OR</h6>
+                                            <p>Ex: <b>"caesar OR nihil"</b> This query will retrieve all documents containing the word "caesar" or containing the word "nihil" or both.</p>
+                                            <h6>NOT</h6>
+                                            <p>Ex: <b>"NOT olet"</b> This query will retrieve all documents except for those who contain the word "olet".</p>
+                                            
+                                            <h4 style="margin-top:40px">Combine Operators</h4>
+                                            <p>Boolean search operators can be used in any combination, but there is an order in which the operations are executed: </p>
+                                                <ul>
+                                                    <li>First all NOT operators,</li>
+                                                    <li>Then all AND operators,</li>
+                                                    <li>Finally all OR operators</li>
+                                                </ul> 
+                                            <p>Ex. <b>"imperator AND tiberius OR imperator AND NOT nero"</b> will be executed in the following order: (imperator AND tiberius) OR (imperator AND (NOT nero))</p>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="modal modal-backdrop" id="load" tabindex="1000" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content" style="background: transparent !important; border: 0 !important">
+                            <div class="loader"></div>
+                          </div>
+                        </div>
+                </div>
+
+                
+            <script>
+                    $("#demo1").on("click", function() {
+                        $("#inputmain").val($("#demoval1").val()),
+                        $("#fire").click()
+                    })
+                    $("#demo2").on("click", function() {
+                        $("#inputmain").val($("#demoval2").val()),
+                        $("#fire").click()
+                    })
+                    $("#demo3").on("click", function() {
+                        $("#inputmain").val($("#demoval3").val()),
+                        $("#fire").click()
+                    })
+                    $("#fire").on("click", function() {
+                        const params = new URLSearchParams({
+                            query: $("#inputmain").val(),
+                        }).toString();
+                        const newUrl = `query.html?${params}`;
+                        // Redirect to the new URL
+                        window.location.href = newUrl;
+                    })
+            </script>
+        <footer class="footer bg-dark text-white" style="margin-bottom: 0px;padding-top: 80px; padding: 20px">
+            
+                <div class="container-fluid text-center py-2" style="font-size: 80%">
+                        <div  style="margin-bottom: 10px">
+                                <b>Powered by:</b>
+                                <a href="https://getbootstrap.com/" class="text-light" target="_blank">Bootstrap</a>, 
+                                <a href="https://leafletjs.com/" class="text-light" target="_blank">Leaflet</a>, 
+                                <a href="https://www.chartjs.org/" class="text-light" target="_blank">Chartjs</a>,
+                                <a href="https://refreshless.com/nouislider/" class="text-light" target="_blank">noUiSlider</a>
+                        </div>
+                          
+                        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"target="_blank"> <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a  style="color: grey" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+                </div>
+        </footer>
+</body>
+</html>

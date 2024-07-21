@@ -1,0 +1,77 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+html, body {
+  height: 100%;
+}
+input[type="number"] {
+-webkit-appearance: textfield;
+-moz-appearance: textfield;
+appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+}
+
+.number-input {
+border: 2px solid #ddd;
+display: inline-flex;
+}
+
+.number-input,
+.number-input * {
+box-sizing: border-box;
+}
+
+
+
+  
+  @media (max-width:	992px)  {
+    #map{
+      height: 350px !important;
+      margin-left: 15px;
+      margin-right: 15px;
+    }
+    .navbar-support {
+      display: none;
+    }
+    .navbar {
+      background-color: #494949 !important;
+    }
+  }
+
+  @media (min-width:	993px)  {
+    .navbar-support {
+      display: block;
+    }
+    .navbar {
+      position: absolute !important;
+    }
+  }
+
+  
+  .loader {
+    z-index: 10000;
+    margin: auto;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 140px;
+    height: 140px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

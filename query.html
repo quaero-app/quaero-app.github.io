@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/png" href="static/css/ae-fav.png"/>
+        <title>Qu&#xe6;ro</title>
+        <meta charset="utf-8" />
+
+        <!--Bootstrap-->
+        <link rel="stylesheet" href="static/lib/bootstrap/bootstrap.min.css">
+        <script src="static/lib/jquery/jquery-3.3.1.slim.min.js"></script>
+        <script src="static/lib/bootstrap/popper.min.js"></script>
+        <script src="static/lib/bootstrap/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="static/lib/leaflet/leaflet.css">
+        <script src="static/lib/leaflet/leaflet.js"></script>
+
+        <link rel="stylesheet" href="static/lib/leaflet/MarkerCluster.Default.css">
+        <script src="static/lib/leaflet/leaflet.markercluster.js"></script>
+
+        <link rel="stylesheet" href="static/lib/nouislider/nouislider.css">
+        <script src="static/lib/nouislider/nouislider.js"></script>
+        <script src="static/lib/nouislider/wNumb.js"></script>
+
+        <script src="static/lib/chartjs/Chart.js"></script>
+        <script src="static/lib/chartjs/chartjs-plugin-datalabels@0.5.0.js"></script>
+        <script src="static/lib/chartjs/chartjs-plugin-annotation.js"></script>
+
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" href="static/css/main.css">
+ 
+
+
+    </head>
+    <body style="background-color:  #494949">
+            
+            <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style=" z-index:1000">
+                    <a class="navbar-brand" href="index.html" style="margin-left:15px">Qu&#xe6;ro</b></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                      <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                          <a class="nav-link" href="index.html">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="documentation.html">DOCUMENTATION</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color: rgba(255,255,255,.5) !important" class="nav-link" target="_blank" href="https://github.com/quaero-app/quaero">GITHUB</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="about.html">ABOUT</a>
+                        </li>
+                      </ul>
+                    </div>
+            </nav>
+
+        <div class="navbar-support" style="height:60px"></div>
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                    <a href="index.html">  <button style="margin: 15px" class="btn btn-dark" type="button"><b><</b> BACK for a new Query</button></a>
+            </div>
+            <div class="col-md-6 bg-dark" style="padding: 25px; border-radius:.3rem .3rem 0 0">
+               <div class="text-white" style="padding: 3px">Query: <span id="queryText"  style="color:rgba(255,255,255,.5);"></span></div>
+                <div id="downloadcontainer" class="text-white" style="padding: 3px">Total documents: <span id="totalDoc" style="color:rgba(255,255,255,.5);"></span></div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+            <div class="row bg-light" style="padding-top: 20px">
+                    <div class="col-md-6">
+                            <div id="map" style="height: 500px; margin-bottom: 15px" ></div>
+                    </div>
+                    <div class="col-md-6" style="margin-top: 10px;">
+                            <div style="margin-right: auto; margin-left: auto; width: 90%; margin-bottom: 10px; text-align: center;">
+                                <div id="counter"></div>
+                                    <button class="btn btn-dark timevent" id="prev"><</button>
+                                        DATE: <input type="number" min='{{ min }}' max= '{{ max }}' step="1" id="input-date"> <span id="dateprefix"></span>
+                                    <button class="btn btn-dark timevent" id="next">></button>
+                                    <div id="datestat"></div>
+                            </div>
+                            <div id="timeline" style="margin-right:10px; margin-left: 10px"></div>
+                            <div id="chartcontainer">
+                            <canvas id="chart"></canvas>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+
+
+       <footer class="footer bg-dark text-white" style="margin-bottom: 0px;padding-top: 80px; padding: 20px">
+
+                <div class="container-fluid text-center py-2" style="font-size: 80%">
+                        <div  style="margin-bottom: 10px">
+                                <b>Powered by:</b>
+                                <a href="https://getbootstrap.com/" class="text-light" target="_blank">Bootstrap</a>,
+                                <a href="https://leafletjs.com/" class="text-light" target="_blank">Leaflet</a>,
+                                <a href="https://www.chartjs.org/" class="text-light" target="_blank">Chartjs</a>,
+                                <a href="https://refreshless.com/nouislider/" class="text-light" target="_blank">noUiSlider</a>
+                        </div>
+
+                        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"target="_blank"> <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a  style="color: grey" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+                </div>
+        </footer>
+    <script>
+    function doSearch(data, query, partialRes) {
+        let resultList = [];
+
+        if (partialRes) {
+            data = partialRes;
+        }
+
+        // OR
+        if (query.includes(" or ")) {
+            const [query1, query2] = query.split(' or ', 2);
+            const orList1 = doSearch(data, query1, partialRes);
+            const orList2 = doSearch(data, query2, partialRes);
+
+            // Combine results from both queries
+            const combinedList = [...orList1];
+            orList2.forEach(item => {
+                if (!combinedList.some(existingItem => existingItem.id === item.id)) {
+                    combinedList.push(item);
+                }
+            });
+            return combinedList;
+        }
+
+        // AND
+        else if (query.includes(" and ")) {
+            const [query1, query2] = query.split(' and ', 2);
+            const resultQuery1 = doSearch(data, query1, partialRes);
+
+            if (resultQuery1.length === 0) {
+                return resultQuery1;
+            } else {
+                return doSearch(resultQuery1, query2, partialRes);
+            }
+        }
+
+        // NOT
+        else if (query.startsWith("not ")) {
+            const subquery = query.replace('not ', '');
+            const regex = new RegExp(`\\b${escapeRegExp(subquery)}\\b`, 'i');
+
+            resultList = data.filter(row => {
+                const target = cleanText(row.text);
+                return !regex.test(target);
+            });
+            return resultList;
+        }
+
+        // BASECASE
+        else {
+            const regex = new RegExp(`\\b${escapeRegExp(query)}\\b`, 'i');
+
+            resultList = data.filter(row => {
+                const target = cleanText(row.text);
+                return regex.test(target);
+            });
+            return resultList;
+        }
+    }
+
+    // Helper function to escape special characters for regex
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Helper function to clean text
+    function cleanText(text) {
+        return text.replace(/[^a-zA-Z\s]/g, '').replace(/\s+/g, ' ').toLowerCase();
+    }
+
+    function geojsonize(data) {
+        // Initialize variables to track min and max dates
+        let minDate = 10000;
+        let maxDate = -10000;
+
+        // Map the data to GeoJSON features
+        const geoList = data.map(item => {
+            // Convert properties and geometry
+            const properties = {
+                epigraph: item.epigraph,
+                text: item.text,
+                place: item.place,
+                start: parseInt(item.start, 10),
+                end: parseInt(item.end, 10),
+                id: item.id,
+                place_name: item.place_name,
+
+            };
+            const geometry = {
+                type: 'Point',
+                coordinates: [parseFloat(item.lat), parseFloat(item.lng)]
+            };
+
+            // Update min and max dates
+            if (properties.start < minDate) minDate = properties.start;
+            if (properties.end > maxDate) maxDate = properties.end;
+
+            return {
+                type: 'Feature',
+                properties,
+                geometry
+            };
+        });
+
+        return {
+            features: geoList,
+            min: minDate,
+            max: maxDate
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const jsonUrl = '/data/Quaero_data.json'; // Replace with your JSON URL
+
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                const query = getQueryParam('query');
+                $("#queryText").html(query);
+                let filteredData = data;
+                if (query) {
+                    filteredData = doSearch(data, query.toLowerCase());
+                    $("#totalDoc").html(filteredData.length);
+                    if (filteredData.length){
+                        const geojson = geojsonize(filteredData);
+                        initialize_viz(geojson.features, geojson.min, geojson.max);
+                    }
+                }
+            })
+            .catch(error => console.error('Error loading JSON:', error));
+    });
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function initialize_viz (epigraphs, min, max) {
+        console.log(epigraphs, min, max)
+        var map = L.map('map', {
+			maxZoom: 11,
+			minZoom: 4,
+			maxBoundsViscosity: 1,
+		});
+
+		map.setView([45.43, 13.18], 4);
+		imageBounds = [
+			[21.08, -28.04],
+			[62.12, 50.54]
+		]; 
+		map.on("zoomstart", function () {
+			zoomLev = map.getZoom(6)
+		})
+		map.setMaxBounds(imageBounds);
+        var basemap_0 = L.tileLayer('https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png', {id: 'DARE' ,attribution: 'Map Tiles: <a href="https://dh.gu.se/dare/" target="_blank">DARE</a>'});
+        basemap_0.addTo(map);
+
+        function acdc(str)
+        {
+            if (str.includes("-")){
+                return str.replace("-","") + " B.C."
+            }
+            else{
+                return str + " A.D."
+            }
+        }
+        function popupstring(str, uri){
+            if (str.length <= 300)
+            {
+                return str
+            }
+            else
+            {
+                return str.slice(0, 300) + " <a href='" + uri + "&lang=en'  target='_blank'>(continue reading)</a>"
+            }
+        }   
+
+
+        function pop_epigraphs(feature, layer) {
+            var popupContent = '<b>ID: ' + "<a href='" + String(feature.properties['epigraph']) + "&lang=en'  target='_blank'>" + String(feature.properties['id']) + '</a></b>' +
+                               '<br> <b>Text:</b> ' + popupstring(String(feature.properties['text']), String(feature.properties['epigraph'])) +
+                               '<br> <b>Place:</b> ' +  "<a href='" + String(feature.properties['place']) + "&lang=en' target='_blank'>" + String(feature.properties['place_name']) + '</a>' +
+                               '<br> <b>Period:</b> ' + acdc(String(feature.properties['start'])) + " - " + acdc(String(feature.properties['end'])) ;
+
+            layer.bindPopup(popupContent);
+        }
+
+        function epigraphs_marker(feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 8.0,
+                fillColor: '#5bc0de',
+                color: '#000000',
+                weight: 1,
+                opacity: 1.0,
+                fillOpacity: 0.8
+            })
+        }
+        var epigraphs_layer = new L.geoJson(epigraphs,{
+            onEachFeature: pop_epigraphs,
+            pointToLayer: epigraphs_marker
+        });
+        var cluster_epigraphs_layer= new L.MarkerClusterGroup({maxClusterRadius: 40, showCoverageOnHover: false});
+        cluster_epigraphs_layer.addLayer(epigraphs_layer);
+        cluster_epigraphs_layer.addTo(map);
+
+        //SLIDER
+
+        var monoslider = document.getElementById('timeline');
+
+        noUiSlider.create(monoslider, {
+            start: parseInt(min),
+            animate: false,
+            connect: 'lower',
+            step: 1,
+            range: {
+                'min': parseInt(min),
+                'max': parseInt(max)
+            },
+            format: wNumb({
+                decimals: 0
+            })
+        });
+        document.getElementById('input-date').setAttribute("value", min);
+        var inputDate = document.getElementById('input-date');
+
+        inputDate.addEventListener('change', function(){
+            newvalue = this.value
+            if (newvalue == 0){ newvalue = -1}
+            monoslider.noUiSlider.set(newvalue);
+        });
+
+
+        document.getElementById('prev').onclick = function(){
+            monoslider.noUiSlider.set([parseInt(inputDate.value) - 1]);
+            }
+        document.getElementById('next').onclick = function(){
+            monoslider.noUiSlider.set([parseInt(inputDate.value) + 1]);
+        }
+
+
+        //CHART
+
+        var dateindex = 0
+
+        var datemax = 0
+        var items = []
+        var labels = []
+        var sum = 0
+
+        for (var date = parseInt(min); date <= parseInt(max); date++) {
+            count = 0
+            epigraphs.forEach(function (ep) {
+                if ( (ep.properties.start <= date) && (ep.properties.end >= date)){
+                    count += 1
+                }
+            })
+            if (date != 0){
+                if (count > datemax){ datemax = count}
+                sum += count
+                labels.push(date)
+                items.push( count)
+            }
+        }
+
+        var leng = labels.length
+        avg = Math.round(sum / leng)
+
+        
+        
+        function customRadius( context )
+        {
+            let index = context.dataIndex;
+            return index === dateindex  ?
+                3 :
+                0;
+        }
+        function customColor( context )
+        {
+            let index = context.dataIndex;
+            return index === dateindex  ?
+                 'rgba(255, 0, 0, 1)' :
+                "transparent";
+        }
+
+       
+        var ctx = document.getElementById("chart");
+        var chart = new Chart(ctx, {
+            type: 'line',
+            options: {
+                plugins: {
+					datalabels: {
+                        align: 'top',
+                        backgroundColor: 'black',
+						borderRadius: 4,
+						color: 'white',
+						display: function(context) {
+                            return context.dataIndex === dateindex
+                        }
+					}
+				},
+                events: ['click'],
+                animation: false,
+                layout: {
+                padding: {
+                        left: 10,
+                        right: 10,
+                        top: 0,
+                        bottom: 0
+                    }
+                },
+                elements: {
+                    point: {
+                        radius : customRadius,
+                        display: true,
+                        backgroundColor : customColor,
+                        borderWidth: 6,
+                        borderColor: 'rgba(255, 0, 0, 0.4)'
+                      },
+                    line: {
+                        borderColor: "transparent",
+                        backgroundColor: "rgba(91, 192, 222, 0.5)"
+                      }
+                },
+                legend: {
+                    display: false
+                },
+              scales: {
+                xAxes: [{
+                  display: true,
+                  ticks: {
+                  maxRotation: 90,
+                  minRotation: 90
+                  }
+                }],
+                yAxes: [{
+                  display: false,
+                  ticks: {
+                      max: datemax + 15 * datemax/ 100
+                  }
+                }],
+              },
+              tooltips: {
+                enabled: false,
+              },
+              annotation: {
+                annotations: [{
+                    drawTime: 'beforeDatasetsDraw',
+                    type: 'line',
+                    mode: 'horizontal',
+                    scaleID: 'y-axis-0',
+                    value: avg,
+                    borderColor: 'rgb(0, 0, 0)',
+                    borderWidth: 0.5,
+                    label: {
+                        backgroundColor: 'rgba(0,0,0,0.0)',
+                        fontColor: 'rgb(0, 0, 0)',
+                        position: "right",
+                        enabled: true,
+                        yAdjust: -8,
+                        content: 'Avg: ' + avg
+                    }
+                }]
+                }
+            },
+            data: {
+                labels: labels,
+                datasets: [{
+                data: items,
+                }]
+            }
+          });
+
+
+        // SIC MUNDUS CREATUS EST
+
+        var last = -10000
+        monoslider.noUiSlider.on('update', function( values, handle ) {
+        document.getElementById('input-date').value = values[0];
+
+        var date = document.getElementById('input-date').value;
+
+        
+        if (date == 0 && last < 0) {
+            document.getElementById('input-date').value = 1;
+            date = 1
+        }
+        else if (date == 0 && last > 0) {
+            document.getElementById('input-date').value = -1;
+            date = -1
+        }
+        last = date
+
+        //first let's clear the layer:
+        cluster_epigraphs_layer.clearLayers();
+        //and repopulate it
+        epigraphs_layer = new L.geoJson(epigraphs,{
+            onEachFeature: pop_epigraphs,
+                filter:
+                    function(feature, layer) {
+                        return (feature.properties.start <= date) && (feature.properties.end >= date);
+                    },
+            pointToLayer: epigraphs_marker
+        })
+        //and back again into the cluster group
+        cluster_epigraphs_layer.addLayer(epigraphs_layer);
+
+        dateindex = labels.indexOf(parseInt(date))
+        chart.update()
+
+        $('#dateprefix').html(function(){
+            if (date < 0){
+                return "B.C."
+            }
+            else{
+                return "A.D."
+            }
+        })
+
+        numberdoc = items[dateindex]
+        totaldoc = epigraphs.length
+        percentage = (numberdoc/totaldoc * 100).toFixed(2)
+
+        function plural(){ if (numberdoc > 1){ return "s "} else{ return " "}}
+            $('#datestat').html(numberdoc + " document" + plural() + "out of " + totaldoc + " ("+ percentage + "%)")
+        })
+
+        $("#chart").click( function(evt){
+            var activePoints = chart.getElementsAtXAxis(evt);
+            if (activePoints[0]) {
+                clickindex = activePoints[0]._index
+                dateclick = labels[clickindex]
+                monoslider.noUiSlider.set(dateclick)
+            }
+        });
+    }
+    </script>
+</body>
+</html>
