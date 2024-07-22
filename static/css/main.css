@@ -35,17 +35,17 @@ box-sizing: border-box;
       margin-left: 15px;
       margin-right: 15px;
     }
-    .navbar-support {
-      display: none;
+    .content {
+        margin-top:0px;
     }
     .navbar {
       background-color: #494949 !important;
     }
   }
 
-  @media (min-width:	993px)  {
-    .navbar-support {
-      display: block;
+  @media (min-width: 993px)  {
+    .content {
+        margin-top:60px;
     }
     .navbar {
       position: absolute !important;
