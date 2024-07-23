@@ -282,15 +282,15 @@
             }
             else
             {
-                return str.slice(0, 300) + " <a href='" + uri + "&lang=en'  target='_blank'>(continue reading)</a>"
+                return str.slice(0, 300) + " <a href='" + uri + "'  target='_blank'>(continue reading)</a>"
             }
         }   
 
 
         function pop_epigraphs(feature, layer) {
-            var popupContent = '<b>ID: ' + "<a href='" + String(feature.properties['epigraph']) + "&lang=en'  target='_blank'>" + String(feature.properties['id']) + '</a></b>' +
+            var popupContent = '<b>ID: ' + "<a href='" + String(feature.properties['epigraph']) + "'  target='_blank'>" + String(feature.properties['id']) + '</a></b>' +
                                '<br> <b>Text:</b> ' + popupstring(String(feature.properties['text']), String(feature.properties['epigraph'])) +
-                               '<br> <b>Place:</b> ' +  "<a href='" + String(feature.properties['place']) + "&lang=en' target='_blank'>" + String(feature.properties['place_name']) + '</a>' +
+                               '<br> <b>Place:</b> ' +  "<a href='" + String(feature.properties['place']) + "' target='_blank'>" + String(feature.properties['place_name']) + '</a>' +
                                '<br> <b>Period:</b> ' + acdc(String(feature.properties['start'])) + " - " + acdc(String(feature.properties['end'])) ;
 
             layer.bindPopup(popupContent);
